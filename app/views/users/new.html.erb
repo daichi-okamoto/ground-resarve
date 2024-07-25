@@ -1,0 +1,86 @@
+<%= form_with(model: @user, local: true) do |form| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+      <ul>
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :postal_code, '郵便番号' %>
+    <%= form.text_field :postal_code %>
+  </div>
+
+  <div class="field">
+    <%= form.label :prefecture, '都道府県' %>
+    <%= form.text_field :prefecture %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address, '住所' %>
+    <%= form.text_field :address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.email_field :email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :credit_card, 'クレジットカード' %>
+    <%= form.text_field :credit_card %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_type, 'ユーザータイプ' %>
+    <%= form.select :user_type, options_for_select([['個人', 'individual'], ['団体', 'organization'], ['協会', 'association']], @user.user_type), {}, { id: 'user_type_select' } %>
+  </div>
+
+  <div class="field" id="team_name_field" style="display: none;">
+    <%= form.label :team_name, 'チーム名' %>
+    <%= form.text_field :team_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :password %>
+    <%= form.password_field :password %>
+  </div>
+
+  <div class="field">
+    <%= form.label :password_confirmation %>
+    <%= form.password_field :password_confirmation %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit 'Create User' %>
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var userTypeSelect = document.getElementById('user_type_select');
+    var teamNameField = document.getElementById('team_name_field');
+
+    userTypeSelect.addEventListener('change', function() {
+      if (['organization', 'association'].includes(userTypeSelect.value)) {
+        teamNameField.style.display = 'block';
+      } else {
+        teamNameField.style.display = 'none';
+      }
+    });
+
+    // ページロード時の初期表示を設定
+    if (['organization', 'association'].includes(userTypeSelect.value)) {
+      teamNameField.style.display = 'block';
+    }
+  });
+</script>
