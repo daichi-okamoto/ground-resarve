@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>グランド予約フォーム</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.15/main.min.css" rel="stylesheet">
+  <link href="/assets/application.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.15/main.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.15/locales-all.min.js"></script>
+  <script src="/assets/application.js"></script>
+  <script type='importmap'>
+    {
+      "imports": {
+        "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.15",
+        "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.15",
+        "@fullcalendar/timegrid": "https://cdn.skypack.dev/@fullcalendar/timegrid@6.1.15"
+      }
+    }
+  </script>
+  <style>
+    /* ボタンの色を変更 */
+    .fc .fc-button-primary {
+      background-color: white; /* ボタンの背景色 */
+      border-color: #DDDDDD; /* ボタンの枠色 */
+    }
+
+    .fc .fc-button-primary:hover {
+      background-color: #45a049; /* ボタンのホバー時の背景色 */
+      border-color: #45a049; /* ボタンのホバー時の枠色 */
+    }
+
+    /* ナビゲーションボタンのアイコン色を変更 */
+    .fc .fc-button-primary .fc-icon {
+      color: #777777; /* アイコンの色 */
+    }
+
+    .fc .fc-button-primary .fc-icon:hover {
+      color: white; /* アイコンの色 */
+    }
+
+    .fc .fc-today-button {
+      background-color: white; /* todayボタンの背景色 */
+      border-color: #DDDDDD; /* todayボタンの枠色 */
+      color: #777777; /* todayボタンの文字色 */
+    }
+
+    /* monthボタンのデザインを変更 */
+    .fc .fc-button-primary[data-view="dayGridMonth"] {
+      background-color: #2196F3; /* 月ボタンの背景色 */
+      border-color: #2196F3; /* 月ボタンの枠色 */
+    } 
+
+  </style>
+  <script type='module'>
+    import { Calendar } from '@fullcalendar/core'
+    import dayGridPlugin from '@fullcalendar/daygrid'
+    import timeGridPlugin from '@fullcalendar/timegrid'
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const calendarEl = document.getElementById('calendar')
+      const calendar = new Calendar(calendarEl, {
+        plugins: [dayGridPlugin, timeGridPlugin],
+        headerToolbar: {
+          left: 'today next',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek'
+        },
+        buttonText: {
+          today: '今日',
+          month: '月',
+          week: '週'
+        },
+        timeZone: 'Asia/Tokyo', // タイムゾーンを設定
+        events: '/reservations.json', // イベントデータを取得するURL
+        views: {
+          dayGridMonth: {
+            dayHeaderFormat: { weekday: 'short' }, // 月表示の曜日のみ表示
+            titleFormat: { year: 'numeric', month: 'long' } // 月表示のタイトルフォーマット
+          },
+          timeGridWeek: {
+            titleFormat: { // タイトルの表示形式を設定
+              month: 'numeric',
+              day: 'numeric',
+              omitCommas: true
+            },
+            slotMinTime: "08:00:00", // 表示する最小時間をAM8:00に設定
+            slotMaxTime: "22:00:00", // 表示する最大時間をPM22:00に設定
+            allDaySlot: false // 全日表示を無くす
+          }
+        },
+        titleFormat: { // 月表示のタイトルフォーマット
+          year: 'numeric',
+          month: 'long'
+        },
+        dayHeaderFormat: { // 日付の表示形式をカスタマイズ
+          weekday: 'short', // 曜日の短縮形
+          month: 'numeric', // 月を数字で表示
+          day: 'numeric', // 日を数字で表示
+          omitCommas: true // カンマを省略
+        },
+        locale: 'ja' // ロケールを日本語に設定
+      })
+      calendar.render()
+    })
+  </script>
+</head>
+<body>
+  <main class="bg-green flex justify-center items-center min-h-screen">
+    <div class="card lg:card-side bg-base-100 shadow-xl max-w-7xl w-full rounded my-14">
+      <div class="card-body">
+        <div class="card-header mb-4">
+          <h2 class="card-title text-black">グラウンド予約</h2>
+          <div class="border-1 border-b border-gray100 pt-4"></div>
+        </div>
+        <div class="text-gray mb-4">
+          <p>1時間単位で予約ができます。</p>
+          <p>予約時間を過ぎると15分単位で追加料金が発生します。</p>
+          <p>1時間1000円です。</p>
+        </div>
+        <div class="select-form mb-4">
+          <div class="mb-2">
+            <label for="facility" class="text-green">施設の選択</label>
+          </div>
+          <select name="facility" id="facility" class="select select-bordered">
+            <option value="1">-</option>
+            <option value="2">クラブハウス（フットサルコート）</option>
+            <option value="3">フルコート</option>
+            <option value="4">ハーフコート（北側）</option>
+            <option value="5">ハーフコート（南側）</option>
+          </select>
+        </div>
+        <div class="reservation-date">
+          <div class="mb-2">
+            <label for="date" class="text-green">予約日時の選択</label>
+          </div>
+          <div id='calendar'></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,7 +1,46 @@
-<h1 class="text-3xl font-bold underline">
-  Hello world!
-</h1>
-
-<button class="bg-gray-900 hover:bg-gray-800 text-white rounded px-4 py-2">tailwind</button>
-
-<button class="btn">daisyUI</button>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>グランド予約フォーム</title>
+  <link href="/assets/application.css" rel="stylesheet">
+</head>
+<body data-turbolinks="false">
+  <%= yield %>
+  <main class="bg-green flex justify-center items-center">
+    <div class="card lg:card-side bg-base-100 shadow-xl max-w-7xl w-full rounded my-14">
+      <div class="card-body">
+        <div class="card-header mb-4">
+          <h2 class="card-title text-black">グラウンド予約</h2>
+          <div class="border-1 border-b border-gray100 pt-4"></div>
+        </div>
+        <div class="text-gray mb-4">
+          <p>1時間単位で予約ができます。</p>
+          <p>予約時間を超過しますと15分単位で追加料金が発生します。</p>
+          <p>1時間XXX円です。</p>
+        </div>
+        <div class="select-form mb-4">
+          <div class="mb-2">
+            <label for="facility" class="text-green">施設の選択</label>
+          </div>
+          <select name="facility" id="facility" class="select select-bordered">
+            <option value="1">-</option>
+            <option value="2">クラブハウス（フットサルコート）</option>
+            <option value="3">フルコート</option>
+            <option value="4">ハーフコート（北側）</option>
+            <option value="5">ハーフコート（南側）</option>
+          </select>
+        </div>
+        <div class="reservation-date">
+          <div class="mb-2">
+            <label for="date" class="text-green">予約日時の選択</label>
+          </div>
+          <input type="date" id="date" class="input input-bordered" placeholder="予約日時を選択してください">
+          <div id="calendar"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
