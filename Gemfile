@@ -52,11 +52,6 @@ gem "bootsnap", require: false
 gem 'cssbundling-rails'
 gem 'jsbundling-rails'
 
-# calendar
-gem 'jquery-rails'
-gem 'fullcalendar-rails'
-gem 'momentjs-rails'
-
 # authentication
 gem 'sorcery', '0.16.3'
 

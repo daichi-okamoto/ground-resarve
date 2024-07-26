@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>グランド予約フォーム</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.15/main.min.css" rel="stylesheet">
+  <link href="/assets/application.css" rel="stylesheet">
+  <%= javascript_include_tag 'application' %>
+</head>
+<body>
+  <main class="bg-green flex justify-center items-center min-h-screen">
+    <div class="card lg:card-side bg-base-100 shadow-xl max-w-7xl w-full rounded my-14">
+      <div class="card-body">
+        <div class="card-header mb-4">
+          <h2 class="card-title text-black">グラウンド予約</h2>
+          <div class="border-1 border-b border-gray100 pt-4"></div>
+        </div>
+        <div class="text-gray mb-4">
+          <p>1時間単位で予約ができます。</p>
+          <p>予約時間を過ぎると15分単位で追加料金が発生します。</p>
+          <p>1時間1000円です。</p>
+        </div>
+        <div class="select-form mb-4">
+          <div class="mb-2">
+            <label for="facility" class="text-green">施設の選択</label>
+          </div>
+          <select name="facility" id="facility" class="select select-bordered">
+            <option value="1">-</option>
+            <option value="2">クラブハウス（フットサルコート）</option>
+            <option value="3">フルコート</option>
+            <option value="4">ハーフコート（北側）</option>
+            <option value="5">ハーフコート（南側）</option>
+          </select>
+        </div>
+        <div class="reservation-date">
+          <div class="mb-2">
+            <label for="date" class="text-green">予約日時の選択</label>
+          </div>
+          <div class="flex justify-between">
+            <div>
+              <button class="btn btn-today btn-sm text-gray bg-white hover:bg-green hover:text-white hover:outline-none">今日</button>
+              <button class="btn next-week-button btn-sm text-gray bg-white hover:bg-green hover:text-white hover:outline-none"> > </button> 
+            </div>
+            <div class="text-gray text-xl week-range" data-date="<%= @week_range.begin %>">
+              <%= @week_range.begin.strftime("%-m/%-d") %> ~ <%= @week_range.end.strftime("%-m/%-d") %>
+            </div>
+              <ul class="flex">
+                <li class="ml-2"><span class="text-xl text-gray">⚪︎</span>受付中</li>
+                <li class="ml-2"><span class="text-xl text-gray">△</span>残りわずか</li>
+                <li class="ml-2"><span class="text-xl text-gray">✖︎</span>締め切り</li>
+              </ul>
+            </div>
+          </div>
+          <table class="table-fixed w-full border-collapse">
+            <thead class="">
+              <tr class="bg-green border border-gray100 h-10">
+                <th></th>
+                <% @week_range.each do |date| %>
+                <th class="font-normal text-white bg-green border border-gray100">
+                  <%= date.strftime("%-m/%-d") %>(<%= japanese_day(date) %>)
+                </th>
+              <% end %>
+              </tr>
+            </thead>
+            <tbody>
+              <% (8..21).each do |hour| %>
+                <tr class="border border-gray100 text-center h-11">
+                  <td><%= "#{hour}:00" %></td>
+                  <% (0..6).each do |day_offset| %>
+                    <% current_day = Date.today.beginning_of_week + day_offset %>
+                    <% is_past = current_day < Date.today || (current_day == Date.today && hour <= Time.now.hour) %>
+                    <td class="border border-gray100 text-center hover:bg-green <%= 'text-gray' if is_past %>">
+                      <% reservation = @reservations.find { |r| r.start_time.to_date == current_day && r.start_time.hour == hour } %>
+                      <% if reservation %>
+                        <span class="text-red-600">×</span>
+                      <% elsif is_past %>
+                        <span class="text-gray-500">×</span>
+                      <% else %>
+                        <a href="<%= new_reservation_path(date: current_day, time: hour) %>" class="block text-gray">○</a>
+                      <% end %>
+                    </td>
+                  <% end %>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
