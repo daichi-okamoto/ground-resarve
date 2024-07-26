@@ -1,13 +1,25 @@
 class ReservationsController < ApplicationController
   def index
-    @reservations = Reservation.all
+    start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
+    start_of_week = start_date.beginning_of_week
+    end_of_week = start_of_week.end_of_week
+
+    @reservations = Reservation.where(start_time: start_of_week..end_of_week)
+    @week_range = start_of_week..end_of_week
+
     respond_to do |format|
-      format.html # 普通のHTMLリクエストに対しては通常のビューを表示
-      format.json { render json: @reservations } # カレンダー用のJSONデータを提供
+      format.html
+      format.json { render json: { reservations: @reservations, week_range: { begin: @week_range.begin, end: @week_range.end } } }
     end
   end
 
   def new
+    start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
+    start_of_week = start_date.beginning_of_week
+    end_of_week = start_of_week.end_of_week
+
+    @reservations = Reservation.where(start_time: start_of_week..end_of_week)
+    @week_range = start_of_week..end_of_week
     @reservation = Reservation.new
   end
 
