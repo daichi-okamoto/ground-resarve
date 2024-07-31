@@ -24,12 +24,15 @@ class ReservationsController < ApplicationController
   end
 
   def create
-    @reservation = Reservation.new(reservation_params)
-    if @reservation.save
-      redirect_to reservations_path, notice: 'Reservation was successfully created.'
-    else
-      render :new
-    end
+  end
+
+  def create_preview
+    # 必要に応じて@reservationオブジェクトを設定
+    @reservation = Reservation.new
+    render 'create'
+  end
+
+  def confirm
   end
 
   private
